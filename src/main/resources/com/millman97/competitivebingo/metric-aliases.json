@@ -1,0 +1,31 @@
+{
+  "_comment": [
+    "Raw activity names, exactly as the game spells them, mapped to canonical metric IDs.",
+    "Deliberately tiny. The generic parsers already produce a predictable ID for almost every",
+    "activity, so an entry earns its place only when the derived ID would be wrong or useless,",
+    "and only when the raw form can be justified from a real message. Keys are matched",
+    "case-insensitively against the activity captured by the parser, before the ID is built.",
+    "Adding an entry changes what a board admin must type, so treat it as a contract change."
+  ],
+
+  "count": {
+    "_comment_lunar": "Message: 'Your Lunar Chest count is: 30.' The parser keeps 'Chest' as part of the proper name, which is right, but older wording drops it and yields the meaningless 'kc.lunar'.",
+    "Lunar": "kc.lunar_chest",
+
+    "_comment_barrows": "RuneLite's ChatCommandsPlugin renames 'Barrows chest' internally, confirming the bare form occurs.",
+    "Barrows chest": "kc.barrows",
+    "Barrows Chests": "kc.barrows",
+
+    "_comment_slayer": "Message: \"You've completed 250 tasks...\". The captured name is the bare word, which would slug to the meaningless 'kc.tasks'. The Wilderness and Mortimer variants are named so a board can ask for one of them specifically.",
+    "tasks": "kc.slayer_tasks",
+    "task": "kc.slayer_tasks",
+    "Wilderness tasks": "kc.wilderness_slayer_tasks",
+    "Mortimer tasks": "kc.mortimer_slayer_tasks"
+  },
+
+  "duration": {
+    "_comment_gauntlet": "The Gauntlet's counter says 'Gauntlet' while its loot and timer messages say 'The Gauntlet'. One activity, so one metric ID.",
+    "The Gauntlet": "time.gauntlet",
+    "The Corrupted Gauntlet": "time.corrupted_gauntlet"
+  }
+}
