@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://competitivebingo.invalid/schema/board.schema.json",
+  "title": "Competitive Bingo board view",
+  "description": "Response of GET /api/plugin/board. A picture of a game, as the server wants it drawn. This is a document, not a model: every string is shown verbatim and the plugin interprets none of it. A game mode the plugin has never heard of is a different arrangement of the same three section kinds, and needs no plugin release. See docs/api-contract.md section 4.5.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "capturedAt",
+    "sections"
+  ],
+  "properties": {
+    "title": {
+      "description": "Heading for the window, e.g. the game's name.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "subtitle": {
+      "description": "One line under the title, e.g. 'Classic - first line wins'.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1024
+    },
+    "capturedAt": {
+      "description": "Epoch milliseconds the server built this at. The plugin shows it, because the board is a snapshot from the last sync and a player needs to know it is not live.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "sections": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    }
+  },
+  "$defs": {
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "description": "GRID lays cells out by their own row and col - a bingo board, but equally a progression ladder or one row of stages. LIST draws them in the order given, one per row. TEXT draws body as a paragraph. A kind the plugin does not recognise is skipped and the rest of the board still draws, so this vocabulary may be added to without waiting for players to update.",
+          "type": "string",
+          "examples": [
+            "GRID",
+            "LIST",
+            "TEXT"
+          ]
+        },
+        "title": {
+          "description": "Heading for the section, or null for an unheaded one.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1024
+        },
+        "rows": {
+          "description": "GRID only. May be omitted, in which case the plugin takes the extent from the cells themselves. A cell outside the stated size widens the grid rather than being discarded.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 50
+        },
+        "cols": {
+          "description": "GRID only, under the same rules as rows.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 50
+        },
+        "cells": {
+          "description": "GRID and LIST.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/cell"
+          }
+        },
+        "body": {
+          "description": "TEXT only.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1024
+        }
+      }
+    },
+    "cell": {
+      "description": "One square of a GRID section, or one row of a LIST section.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "row": {
+          "description": "GRID only, zero-based. A cell missing either coordinate is dropped from a grid; a square with no cell is drawn blank. Ignored in a LIST.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 49
+        },
+        "col": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 49
+        },
+        "title": {
+          "description": "The main line, e.g. 'Dragon pickaxe' or 'The Sharks'.",
+          "type": "string",
+          "maxLength": 1024
+        },
+        "lines": {
+          "description": "Further lines under the title, e.g. ['3 / 5', 'The Sharks'].",
+          "type": [
+            "array",
+            "null"
+          ],
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+        "state": {
+          "description": "How the cell is shaded. A state the plugin does not recognise, or null, draws neutral.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "examples": [
+            "COMPLETE",
+            "IN_PROGRESS",
+            "CONTESTED",
+            "LOCKED",
+            "EMPTY"
+          ]
+        },
+        "accent": {
+          "description": "A colour to key the cell by, as #rrggbb - a team colour, usually. Drawn as a stripe down the edge rather than as a fill, so it never fights the state shading. Anything not matching the pattern is ignored.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "tooltip": {
+          "description": "Shown on hover, for detail that will not fit in the cell.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1024
+        }
+      }
+    }
+  }
+}
