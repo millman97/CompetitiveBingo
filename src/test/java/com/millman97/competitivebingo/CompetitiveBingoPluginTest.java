@@ -1,13 +1,13 @@
-package com.example;
+package com.millman97.competitivebingo;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
-public class ExamplePluginTest
+public class CompetitiveBingoPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(ExamplePlugin.class);
+		ExternalPluginManager.loadBuiltin(CompetitiveBingoPlugin.class);
 		RuneLite.main(args);
 	}
 }
